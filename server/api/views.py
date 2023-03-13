@@ -1,7 +1,18 @@
+import os
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.timezone import datetime
 import re
+from spotube.downloader import downloader as Downloader
+
+from dotenv import load_dotenv
+load_dotenv()  # loads the configs from .env
+
+downloader = Downloader(
+    str(os.getenv('SPOTIFY_CLIENT_ID')),
+    str(os.getenv('SPOTIFY_CLIENT_SECRET')),
+    str(os.getenv('GENIUS_API_KEY')),
+)
 
 # Create your views here.
 
@@ -23,3 +34,7 @@ def hello_there(request, name):
 
     content = "Hello there, " + clean_name + "! It's " + formatted_now
     return HttpResponse(content)
+
+def download(request, link):
+    downloader.start_downloader(link)
+    return HttpResponse("Hello, Django!")

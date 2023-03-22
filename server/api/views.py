@@ -1,9 +1,12 @@
+import json
 import os
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.timezone import datetime
 import re
 from spotube import downloader as Downloader
+# from django.views.decorators.csrf import csrf_protect
+# from django.middleware.csrf import get_token
 
 from dotenv import load_dotenv
 load_dotenv()  # loads the configs from .env
@@ -35,6 +38,11 @@ def hello_there(request, name):
     content = "Hello there, " + clean_name + "! It's " + formatted_now
     return HttpResponse(content)
 
-def download(request, link):
-    downloader.start_downloader(link)
+def download(request):
+    data = json.loads(request.body)
+    print("/////////////////")
+    print(data['spotify_link'])
+    downloader.start_downloader(data['spotify_link'])
+    progress = downloader.get_progress()
+    print(progress)
     return HttpResponse("Hello, Django!")

@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.timezone import datetime
 import re
-from spotube.downloader import downloader as Downloader
+from spotube import downloader as Downloader
 
 from dotenv import load_dotenv
 load_dotenv()  # loads the configs from .env

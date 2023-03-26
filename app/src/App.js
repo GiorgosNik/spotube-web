@@ -1,44 +1,28 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
 import MusicVideoIcon from "@mui/icons-material/MusicVideo";
-import CssBaseline from "@mui/material/CssBaseline";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import IconButton from "@material-ui/core/IconButton";
-import Collapse from "@mui/material/Collapse";
+import { theme } from "./theme";
+import Switch from "@material-ui/core/Switch";
 
-import { styled } from "@mui/material/styles";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  AppBar,
+  FormControlLabel,
+  FormGroup,
+  Button,
+  CssBaseline,
+  Stack,
+  Box,
+  Toolbar,
+  Typography,
+  Container,
+  TextField,
+  IconButton,
+  Collapse,
+  styled,
+  ThemeProvider,
+  alpha,
+} from "@mui/material";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: "#d6d6d6",
-      main: "#2c2b30",
-      dark: "#181818",
-      contrastText: "#f8f4f4",
-    },
-    secondary: {
-      light: "#f8f4f4",
-      main: "#f58f7c",
-    },
-    dark_button: {
-      light: "#d6d6d6",
-      main: "#181818",
-      dark: "#2c2b30",
-      contrastText: "#f58f7c",
-    },
-    light_button: {
-      main: "#f58f7c",
-    },
-  },
-});
 
 const StyledTextField = styled(TextField)({
   "& label": {
@@ -63,11 +47,44 @@ const StyledTextField = styled(TextField)({
   },
 });
 
+const StyledFormControlLabel = styled(FormControlLabel)({
+    color: theme.palette.secondary.main,
+});
+
+const StyledSwitch = styled(Switch)(({ theme }) => ({
+  '& .MuiSwitch-switchBase.Mui-checked': {
+    color: theme.palette.secondary.light,
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.secondary.light, theme.palette.action.hoverOpacity),
+    },
+  },
+  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+    backgroundColor: theme.palette.secondary.main,
+  },
+}));
+
 const dropdown_menu = (
   <Box
-    component="svg"
-    sx={{ width: 100, height: 100, backgroundColor: "red" }}
-  ></Box>
+    sx={{
+      border: 1,
+      backgroundColor: "primary.dark",
+      borderColor: "secondary.main",
+      borderRadius: 1.5,
+    }}
+  >
+    <Container maxWidth="lg">
+      <FormGroup>
+        <StyledFormControlLabel
+          control={<StyledSwitch defaultChecked />}
+          label="Download Lyrics"
+        />
+        <StyledFormControlLabel
+          control={<StyledSwitch defaultChecked color="primary"/>}
+          label="Normalize Audio"
+        />
+      </FormGroup>
+    </Container>
+  </Box>
 );
 
 const StyledArrowIconButton = styled(IconButton)({
@@ -83,7 +100,7 @@ function set_playlist_link(url) {
   playlist_link = url;
 }
 
-export default function Album() {
+export default function DownloadPage() {
   const [checked, setChecked] = React.useState(false);
 
   const handleChange = () => {
@@ -108,7 +125,7 @@ export default function Album() {
             backgroundColor: "#2c2b30",
             backgroundImage: `radial-gradient(at -120% -1000%, #d6d6d6 10%, #2c2b30 90%)`,
             pt: 8,
-            pb: 100,
+            pb: "100%",
           }}
         >
           <Container maxWidth="sm">
@@ -140,37 +157,29 @@ export default function Album() {
               InputProps={{ style: { color: "white" } }}
             />
 
-            <Stack
-              sx={{ pt: 4 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-            >
-              <Button color="dark_button" variant="contained">
-                Download Playlist
-              </Button>
+            <Stack direction="column" spacing={2} justifyContent="center">
+              <Stack
+                sx={{ pt: 4 }}
+                direction="row"
+                spacing={2}
+                justifyContent="center"
+              >
+                <Button color="dark_button" variant="contained">
+                  Download Playlist
+                </Button>
 
-              <Button color="light_button" variant="outlined">
-                Validate Playlist
-              </Button>
-              <StyledArrowIconButton onClick={handleChange}>
-                <KeyboardArrowDownIcon />
-              </StyledArrowIconButton>
-            </Stack>
-            <Box
-              sx={{
-                "& > :not(style)": {
-                  display: "flex",
-                  justifyContent: "space-around",
-                  height: 120,
-                  width: 250,
-                },
-              }}
-            >
-              <div>
+                <Button color="light_button" variant="outlined">
+                  Validate Playlist
+                </Button>
+                <StyledArrowIconButton onClick={handleChange}>
+                  <KeyboardArrowDownIcon />
+                </StyledArrowIconButton>
+              </Stack>
+
+              <Container>
                 <Collapse in={checked}>{dropdown_menu}</Collapse>
-              </div>
-            </Box>
+              </Container>
+            </Stack>
           </Container>
         </Box>
 

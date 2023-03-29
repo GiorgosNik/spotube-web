@@ -4,6 +4,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { theme } from "./theme";
 import { DropdownMenu } from "./components/dropdown_menu";
 import { StyledTextField } from "./components/styled_text_field";
+import { v4 as uuid } from "uuid";
 
 import {
   AppBar,
@@ -27,17 +28,18 @@ const StyledArrowIconButton = styled(IconButton)({
   },
 });
 
-let playlist_link = "";
-
-function set_playlist_link(url) {
-  playlist_link = url;
-}
-
 export default function DownloadPage() {
   const [checked, setChecked] = React.useState(false);
+  const [playlist_link, setPlaylistLink] = React.useState("");
+  const [unique_user_id] = React.useState(uuid());
 
   const handleChange = () => {
     setChecked((prev) => !prev);
+  };
+
+  const send_download_request = () => {
+    console.log(playlist_link);
+    console.log(unique_user_id);
   };
 
   return (
@@ -84,7 +86,7 @@ export default function DownloadPage() {
             <StyledTextField
               label="Link To Playlist"
               variant="outlined"
-              onChange={(e) => set_playlist_link(e.target.value)}
+              onChange={(e) => setPlaylistLink(e.target.value)}
               fullWidth
               autoComplete="off"
               InputProps={{ style: { color: "white" } }}
@@ -97,7 +99,11 @@ export default function DownloadPage() {
                 spacing={2}
                 justifyContent="center"
               >
-                <Button color="dark_button" variant="contained">
+                <Button
+                  color="dark_button"
+                  variant="contained"
+                  onClick={send_download_request}
+                >
                   Download Playlist
                 </Button>
 

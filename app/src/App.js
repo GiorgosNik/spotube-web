@@ -2,12 +2,11 @@ import * as React from "react";
 import MusicVideoIcon from "@mui/icons-material/MusicVideo";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { theme } from "./theme";
-import Switch from "@material-ui/core/Switch";
+import { DropdownMenu } from "./components/dropdown_menu";
+import { StyledTextField } from "./components/styled_text_field";
 
 import {
   AppBar,
-  FormControlLabel,
-  FormGroup,
   Button,
   CssBaseline,
   Stack,
@@ -15,77 +14,11 @@ import {
   Toolbar,
   Typography,
   Container,
-  TextField,
   IconButton,
   Collapse,
   styled,
   ThemeProvider,
-  alpha,
 } from "@mui/material";
-
-
-const StyledTextField = styled(TextField)({
-  "& label": {
-    color: "white",
-  },
-  "& InputProps": {
-    style: { color: "white" },
-  },
-  "& label.Mui-focused": {
-    color: theme.palette.secondary.main,
-  },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "white",
-  },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "white",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: theme.palette.secondary.main,
-    },
-  },
-});
-
-const StyledFormControlLabel = styled(FormControlLabel)({
-    color: theme.palette.secondary.main,
-});
-
-const StyledSwitch = styled(Switch)(({ theme }) => ({
-  '& .MuiSwitch-switchBase.Mui-checked': {
-    color: theme.palette.secondary.light,
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.secondary.light, theme.palette.action.hoverOpacity),
-    },
-  },
-  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: theme.palette.secondary.main,
-  },
-}));
-
-const dropdown_menu = (
-  <Box
-    sx={{
-      border: 1,
-      backgroundColor: "primary.dark",
-      borderColor: "secondary.main",
-      borderRadius: 1.5,
-    }}
-  >
-    <Container maxWidth="lg">
-      <FormGroup>
-        <StyledFormControlLabel
-          control={<StyledSwitch defaultChecked />}
-          label="Download Lyrics"
-        />
-        <StyledFormControlLabel
-          control={<StyledSwitch defaultChecked color="primary"/>}
-          label="Normalize Audio"
-        />
-      </FormGroup>
-    </Container>
-  </Box>
-);
 
 const StyledArrowIconButton = styled(IconButton)({
   color: theme.palette.secondary.light,
@@ -177,7 +110,7 @@ export default function DownloadPage() {
               </Stack>
 
               <Container>
-                <Collapse in={checked}>{dropdown_menu}</Collapse>
+                <Collapse in={checked}>{DropdownMenu}</Collapse>
               </Container>
             </Stack>
           </Container>

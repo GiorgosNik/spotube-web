@@ -29,15 +29,18 @@ const StyledArrowIconButton = styled(IconButton)({
 });
 
 export default function DownloadPage() {
-  const [checked, setChecked] = React.useState(false);
-  const [playlist_link, setPlaylistLink] = React.useState("");
+  var [checked, setChecked] = React.useState(false);
+  var [playlist_link, setPlaylistLink] = React.useState("");
   const [unique_user_id] = React.useState(uuid());
+  var [download_active, setDownloadActive] = React.useState(false);
 
-  const handleChange = () => {
+  const handleArrowButtonClick = () => {
     setChecked((prev) => !prev);
   };
 
   const send_download_request = () => {
+    setDownloadActive(true);
+    console.log(download_active);
     console.log(playlist_link);
     console.log(unique_user_id);
   };
@@ -83,42 +86,46 @@ export default function DownloadPage() {
               The Spotify Downloader
             </Typography>
 
-            <StyledTextField
-              label="Link To Playlist"
-              variant="outlined"
-              onChange={(e) => setPlaylistLink(e.target.value)}
-              fullWidth
-              autoComplete="off"
-              InputProps={{ style: { color: "white" } }}
-            />
+            {download_active == false ? (
+              <Box>
+                <StyledTextField
+                  label="Link To Playlist"
+                  variant="outlined"
+                  onChange={(e) => setPlaylistLink(e.target.value)}
+                  fullWidth
+                  autoComplete="off"
+                  InputProps={{ style: { color: theme.palette.primary.light } }}
+                />
 
-            <Stack direction="column" spacing={2} justifyContent="center">
-              <Stack
-                sx={{ pt: 4 }}
-                direction="row"
-                spacing={2}
-                justifyContent="center"
-              >
-                <Button
-                  color="dark_button"
-                  variant="contained"
-                  onClick={send_download_request}
-                >
-                  Download Playlist
-                </Button>
+                <Stack direction="column" spacing={2} justifyContent="center">
+                  <Stack
+                    sx={{ pt: 4 }}
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center"
+                  >
+                    <Button
+                      color="dark_button"
+                      variant="contained"
+                      onClick={send_download_request}
+                    >
+                      Download Playlist
+                    </Button>
 
-                <Button color="light_button" variant="outlined">
-                  Validate Playlist
-                </Button>
-                <StyledArrowIconButton onClick={handleChange}>
-                  <KeyboardArrowDownIcon />
-                </StyledArrowIconButton>
-              </Stack>
+                    <Button color="light_button" variant="outlined">
+                      Validate Playlist
+                    </Button>
+                    <StyledArrowIconButton onClick={handleArrowButtonClick}>
+                      <KeyboardArrowDownIcon />
+                    </StyledArrowIconButton>
+                  </Stack>
 
-              <Container>
-                <Collapse in={checked}>{DropdownMenu}</Collapse>
-              </Container>
-            </Stack>
+                  <Container>
+                    <Collapse in={checked}>{DropdownMenu}</Collapse>
+                  </Container>
+                </Stack>
+              </Box>
+            ) : null}
           </Container>
         </Box>
 

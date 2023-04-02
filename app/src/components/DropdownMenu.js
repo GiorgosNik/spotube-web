@@ -1,6 +1,6 @@
 import * as React from "react";
 import { theme } from "../theme";
-import { StyledSwitch } from "./styled_switch";
+import { StyledSwitch } from "./StyledSwitch";
 
 import {
   FormControlLabel,

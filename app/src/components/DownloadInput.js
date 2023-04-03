@@ -2,8 +2,8 @@ import * as React from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { theme } from "../theme";
 import { DropdownMenu } from "./DropdownMenu";
-import { StyledTextField } from "./StyledTextField";
-import { StyledArrowIconButton } from "./StyledArrowIconButton";
+import { StyledTextField } from "../styledComponents/StyledTextField";
+import { StyledArrowIconButton } from "../styledComponents/StyledArrowIconButton";
 
 import {
   Button,
@@ -18,7 +18,6 @@ import {
 export default function DownloadInput(props) {
   var [checked, setChecked] = React.useState(false);
   var [playlist_link, setPlaylistLink] = React.useState("");
-  var [downloadActive] = React.useState(false);
 
   const handleArrowButtonClick = () => {
     setChecked((prev) => !prev);
@@ -32,7 +31,6 @@ export default function DownloadInput(props) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {downloadActive === false ? (
         <Box>
           <StyledTextField
             label="Link To Playlist"
@@ -71,7 +69,6 @@ export default function DownloadInput(props) {
             </Container>
           </Stack>
         </Box>
-      ) : null}
     </ThemeProvider>
   );
 }

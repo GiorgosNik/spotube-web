@@ -2,6 +2,7 @@ import * as React from "react";
 import MusicVideoIcon from "@mui/icons-material/MusicVideo";
 import { theme } from "./theme";
 import DownloadInput from "./components/DownloadInput";
+import DownloadProgress from "./components/DownloadProgress";
 import { v4 as uuid } from "uuid";
 
 import {
@@ -15,7 +16,6 @@ import {
 } from "@mui/material";
 
 export default function DownloadPage() {
-  // var [playlist_link, setPlaylistLink] = React.useState("");
   const [uniqueUserID] = React.useState(uuid());
   var [downloadActive, setDownloadActive] = React.useState(false);
 
@@ -36,7 +36,6 @@ export default function DownloadPage() {
         </Toolbar>
       </AppBar>
       <main>
-        {/* Hero unit */}
         <Box
           sx={{
             backgroundColor: "#2c2b30",
@@ -71,12 +70,11 @@ export default function DownloadPage() {
                 handleDownloadStart={handleDownloadStart}
               />
             ) : null}
+            {downloadActive === true ? <DownloadProgress /> : null}
           </Container>
         </Box>
 
-        <Container sx={{ py: 8 }} maxWidth="md">
-          {/* End hero unit */}
-        </Container>
+        <Container  maxWidth="md"></Container>
       </main>
     </ThemeProvider>
   );

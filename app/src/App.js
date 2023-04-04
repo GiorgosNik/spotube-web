@@ -70,11 +70,13 @@ export default function DownloadPage() {
                 handleDownloadStart={handleDownloadStart}
               />
             ) : null}
-            {downloadActive === true ? <DownloadProgress /> : null}
+            {downloadActive === true ? (
+              <DownloadProgress setDownloadActive={setDownloadActive} />
+            ) : null}
           </Container>
         </Box>
 
-        <Container  maxWidth="md"></Container>
+        <Container maxWidth="md"></Container>
       </main>
     </ThemeProvider>
   );

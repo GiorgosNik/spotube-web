@@ -6,6 +6,8 @@ import LinearProgress, {
 const StyledBorderProgressBar = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
+  marginTop:"3em",
+  marginBottom:"2em",
   [`&.${linearProgressClasses.colorPrimary}`]: {
     backgroundColor: theme.palette.primary.light,
   },

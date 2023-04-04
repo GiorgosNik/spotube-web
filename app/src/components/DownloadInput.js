@@ -31,44 +31,44 @@ export default function DownloadInput(props) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-        <Box>
-          <StyledTextField
-            label="Link To Playlist"
-            variant="outlined"
-            onChange={(e) => setPlaylistLink(e.target.value)}
-            fullWidth
-            autoComplete="off"
-            InputProps={{ style: { color: theme.palette.primary.light } }}
-          />
+      <Box>
+        <StyledTextField
+          label="Link To Playlist"
+          variant="outlined"
+          onChange={(e) => setPlaylistLink(e.target.value)}
+          fullWidth
+          autoComplete="off"
+          InputProps={{ style: { color: theme.palette.primary.light } }}
+        />
 
-          <Stack direction="column" spacing={2} justifyContent="center">
-            <Stack
-              sx={{ pt: 4 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
+        <Stack direction="column" spacing={2} justifyContent="center">
+          <Stack
+            sx={{ pt: 4 }}
+            direction="row"
+            spacing={2}
+            justifyContent="center"
+          >
+            <Button
+              color="dark_button"
+              variant="contained"
+              onClick={sendDownloadRequest}
             >
-              <Button
-                color="dark_button"
-                variant="contained"
-                onClick={sendDownloadRequest}
-              >
-                Download Playlist
-              </Button>
+              Download Playlist
+            </Button>
 
-              <Button color="light_button" variant="outlined">
-                Validate Playlist
-              </Button>
-              <StyledArrowIconButton onClick={handleArrowButtonClick}>
-                <KeyboardArrowDownIcon />
-              </StyledArrowIconButton>
-            </Stack>
-
-            <Container>
-              <Collapse in={checked}>{DropdownMenu}</Collapse>
-            </Container>
+            <Button color="light_button" variant="outlined">
+              Validate Playlist
+            </Button>
+            <StyledArrowIconButton onClick={handleArrowButtonClick}>
+              <KeyboardArrowDownIcon />
+            </StyledArrowIconButton>
           </Stack>
-        </Box>
+
+          <Container>
+            <Collapse in={checked}>{DropdownMenu}</Collapse>
+          </Container>
+        </Stack>
+      </Box>
     </ThemeProvider>
   );
 }

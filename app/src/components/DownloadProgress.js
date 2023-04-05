@@ -1,7 +1,7 @@
 import * as React from "react";
 import { theme } from "../theme";
-import { StyledBorderProgressBar } from "../styledComponents/StyledBorderProgressBar";
-import StyledLoadingCircle from "./LoadingCircleComponent";
+import LoadingCircle from "./LoadingCircle";
+import ProgressBar from "./ProgressBar";
 
 import {
   Button,
@@ -41,10 +41,18 @@ export default function DownloadProgress(props) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box>
-        {downloadStarted === false ? <StyledLoadingCircle /> : null}
-        {downloadStarted === true ? (
-          <StyledBorderProgressBar variant="determinate" value={progress} />
-        ) : null}
+        <Box
+          sx={{
+            height: "120px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {downloadStarted === false ? <LoadingCircle /> : null}
+          {downloadStarted === true ? (
+            <ProgressBar progress={progress} />
+          ) : null}
+        </Box>
         <Stack direction="column" spacing={2} justifyContent="center">
           <Stack
             sx={{ pt: 4 }}

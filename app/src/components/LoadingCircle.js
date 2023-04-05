@@ -6,7 +6,7 @@ import CircularProgress, {
 
 import { Box, Typography, Stack } from "@mui/material";
 
-export default function StyledLoadingCircle(props) {
+export default function LoadingCircle(props) {
   const size = 100;
 
   return (

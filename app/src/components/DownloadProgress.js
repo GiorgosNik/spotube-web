@@ -2,6 +2,7 @@ import * as React from "react";
 import { theme } from "../theme";
 import LoadingCircle from "./LoadingCircle";
 import ProgressBar from "./ProgressBar";
+import "../css/animations.css";
 
 import {
   Button,
@@ -14,6 +15,14 @@ import {
 
 export default function DownloadProgress(props) {
   var [downloadStarted, setDownloadStarted] = React.useState(false);
+
+  const mountedStyle = {
+    animation: "inAnimation 300ms ease-in",
+  };
+  const unmountedStyle = {
+    animation: "outAnimation 300ms ease-out",
+    animationFillMode: "forwards",
+  };
 
   const handleCancelClick = () => {
     props.setDownloadActive(false);
@@ -48,10 +57,16 @@ export default function DownloadProgress(props) {
             justifyContent: "center",
           }}
         >
-          {downloadStarted === false ? <LoadingCircle /> : null}
-          {downloadStarted === true ? (
-            <ProgressBar progress={progress} />
-          ) : null}
+          {downloadStarted === false && (
+            <div style={downloadStarted ? unmountedStyle : mountedStyle}>
+              <LoadingCircle />
+            </div>
+          )}
+          {downloadStarted && (
+            <div style={downloadStarted ? mountedStyle : unmountedStyle}>
+              <ProgressBar progress={progress} />
+            </div>
+          )}
         </Box>
         <Stack direction="column" spacing={2} justifyContent="center">
           <Stack

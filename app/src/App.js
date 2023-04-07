@@ -4,6 +4,7 @@ import { theme } from "./theme";
 import DownloadInput from "./components/DownloadInput";
 import DownloadProgress from "./components/DownloadProgress";
 import { v4 as uuid } from "uuid";
+import { mountedStyle, unmountedStyle } from "./animations.js";
 
 import {
   AppBar,
@@ -18,11 +19,6 @@ import {
 export default function DownloadPage() {
   const [uniqueUserID] = React.useState(uuid());
   var [downloadActive, setDownloadActive] = React.useState(false);
-
-  function handleDownloadStart(playlistLink) {
-    console.log(uniqueUserID);
-    console.log(playlistLink);
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -63,16 +59,19 @@ export default function DownloadPage() {
             >
               The Spotify Downloader
             </Typography>
-
-            {downloadActive === false ? (
-              <DownloadInput
-                setDownloadActive={setDownloadActive}
-                handleDownloadStart={handleDownloadStart}
-              />
-            ) : null}
-            {downloadActive === true ? (
-              <DownloadProgress setDownloadActive={setDownloadActive} />
-            ) : null}
+            {downloadActive === false && (
+              <div style={downloadActive ? unmountedStyle : mountedStyle}>
+                <DownloadInput
+                  setDownloadActive={setDownloadActive}
+                  uniqueUserID={uniqueUserID}
+                />
+              </div>
+            )}
+            {downloadActive === true && (
+              <div style={downloadActive ? mountedStyle : unmountedStyle}>
+                <DownloadProgress setDownloadActive={setDownloadActive} />
+              </div>
+            )}
           </Container>
         </Box>
 

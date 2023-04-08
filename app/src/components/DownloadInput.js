@@ -4,6 +4,8 @@ import { theme } from "../theme";
 import { DropdownMenu } from "./DropdownMenu";
 import { StyledTextField } from "../styledComponents/StyledTextField";
 import { StyledArrowIconButton } from "../styledComponents/StyledArrowIconButton";
+import { validateLinkFormat } from "../utils/urlValidator";
+import { backend } from "../urls";
 
 import {
   Button,
@@ -14,19 +16,6 @@ import {
   Collapse,
   ThemeProvider,
 } from "@mui/material";
-
-function validateLinkFormat(str) {
-  const pattern = new RegExp(
-    "^(https?:\\/\\/)?" + // protocol
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-      "(\\#[-a-z\\d_]*)?$",
-    "i"
-  );
-  return pattern.test(str);
-}
 
 export default function DownloadInput(props) {
   var [checked, setChecked] = React.useState(false);
@@ -45,6 +34,7 @@ export default function DownloadInput(props) {
       setInputErrorMessage("Invalid URL");
       return false;
     } else {
+      setInputErrorMessage("");
       return true;
     }
   };
@@ -53,22 +43,17 @@ export default function DownloadInput(props) {
     if (validateURL()) {
       const requestOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           playlist_link: playlist_link,
           user_id: props.uniqueUserID,
         }),
+        headers: { "Content-Type": "application/json" },
       };
-      console.log("Request...");
-      console.log(requestOptions.body);
-      fetch("https://jsonplaceholder.typicode.com/posts", requestOptions)
+      fetch(backend, requestOptions)
         .then((response) => response.json())
         .then((data) => {
-          if (data.id === 101) {
-            console.log("Response...");
-            console.log(data);
-            props.setDownloadActive(true);
-          }
+          console.log(data);
+          props.setDownloadActive(true);
         })
         .catch((err) => {
           console.log(err.message);

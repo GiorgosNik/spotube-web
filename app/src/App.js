@@ -24,7 +24,7 @@ export default function DownloadPage() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AppBar position="relative">
-        <Toolbar style={{ background: "#2c2b30" }}>
+        <Toolbar style={{ background: "#2c2b30", height: "6vh" }}>
           <MusicVideoIcon sx={{ mr: 2 }} />
           <Typography variant="h6" color="inherit" noWrap>
             Spotube
@@ -37,7 +37,7 @@ export default function DownloadPage() {
             backgroundColor: "#2c2b30",
             backgroundImage: `radial-gradient(at -120% -1000%, #d6d6d6 10%, #2c2b30 90%)`,
             pt: 8,
-            pb: "100%",
+            height: "93.2vh",
           }}
         >
           <Container maxWidth="sm">

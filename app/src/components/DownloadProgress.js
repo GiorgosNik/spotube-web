@@ -3,6 +3,7 @@ import { theme } from "../theme";
 import LoadingCircle from "./LoadingCircle";
 import ProgressBar from "./ProgressBar";
 import { mountedStyle, unmountedStyle } from "../animations.js";
+import { backend } from "../urls";
 
 import {
   Button,
@@ -27,16 +28,34 @@ export default function DownloadProgress(props) {
 
   const [progress, setProgress] = React.useState(0);
 
+  const getDownloadStatus = () => {
+    fetch(
+      backend +
+        "?" +
+        new URLSearchParams({
+          user_id: props.uniqueUserID,
+        })
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status > 0) {
+          setDownloadStarted(true);
+          setProgress(data.status);
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= 100 ? 10 : prevProgress + 10
-      );
-    }, 800);
+      getDownloadStatus();
+    }, 1000);
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  });
 
   return (
     <ThemeProvider theme={theme}>

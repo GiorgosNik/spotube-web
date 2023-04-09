@@ -69,7 +69,10 @@ export default function DownloadPage() {
             )}
             {downloadActive === true && (
               <div style={downloadActive ? mountedStyle : unmountedStyle}>
-                <DownloadProgress setDownloadActive={setDownloadActive} />
+                <DownloadProgress
+                  setDownloadActive={setDownloadActive}
+                  uniqueUserID={uniqueUserID}
+                />
               </div>
             )}
           </Container>

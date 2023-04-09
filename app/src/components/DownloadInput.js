@@ -71,7 +71,7 @@ export default function DownloadInput(props) {
           helperText={inputErrorMessage}
           label="Link To Playlist"
           variant="outlined"
-          onChange={(e) => setPlaylistLink(e.target.value)}
+          onChange={(e) => {setPlaylistLink(e.target.value); setInputErrorMessage("");} }
           fullWidth
           autoComplete="off"
           InputProps={{ style: { color: theme.palette.primary.light } }}

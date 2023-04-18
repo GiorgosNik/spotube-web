@@ -132,4 +132,6 @@ dmypy.json
 ffmpeg.exe
 ffmpeg
 ffplay
+ffplay.exe
 ffprobe
+ffprobe.exe

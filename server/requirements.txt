@@ -1,5 +1,5 @@
 Django==4.1.7
 python-dotenv==1.0.0
-spotube==0.5.1
+spotube==0.5.2
 django-cors-headers==3.14.0
 djangorestframework==3.14.0

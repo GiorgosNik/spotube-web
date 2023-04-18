@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.timezone import datetime
 import re
-from spotube import downloader as Downloader
+from spotube_package import downloader as Downloader
 # from django.views.decorators.csrf import csrf_protect
 # from django.middleware.csrf import get_token
 

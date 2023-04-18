@@ -130,3 +130,6 @@ dmypy.json
 
 .vscode/
 ffmpeg.exe
+ffmpeg
+ffplay
+ffprobe

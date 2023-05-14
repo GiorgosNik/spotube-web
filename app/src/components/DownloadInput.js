@@ -18,9 +18,9 @@ import {
 } from "@mui/material";
 
 export default function DownloadInput(props) {
-  var [checked, setChecked] = React.useState(false);
-  var [playlist_link, setPlaylistLink] = React.useState("");
-  var [inputErrorMessage, setInputErrorMessage] = React.useState("");
+  let [checked, setChecked] = React.useState(false);
+  let [playlist_link, setPlaylistLink] = React.useState("");
+  let [inputErrorMessage, setInputErrorMessage] = React.useState("");
 
   const handleArrowButtonClick = () => {
     setChecked((prev) => !prev);
@@ -66,7 +66,7 @@ export default function DownloadInput(props) {
       <CssBaseline />
       <Box>
         <StyledTextField
-          error={!(inputErrorMessage === "")}
+          error={(inputErrorMessage !== "")}
           inputProps={{ spellCheck: "false" }}
           helperText={inputErrorMessage}
           label="Link To Playlist"

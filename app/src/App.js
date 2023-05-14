@@ -1,16 +1,14 @@
 import * as React from "react";
-import MusicVideoIcon from "@mui/icons-material/MusicVideo";
 import { theme } from "./theme";
 import DownloadInput from "./components/DownloadInput";
 import DownloadProgress from "./components/DownloadProgress";
 import { v4 as uuid } from "uuid";
 import { mountedStyle, unmountedStyle } from "./animations.js";
+import { Typewriter } from "react-simple-typewriter";
 
 import {
-  AppBar,
   CssBaseline,
   Box,
-  Toolbar,
   Typography,
   Container,
   ThemeProvider,
@@ -18,39 +16,40 @@ import {
 
 export default function DownloadPage() {
   const [uniqueUserID] = React.useState(uuid());
-  var [downloadActive, setDownloadActive] = React.useState(false);
+  let [downloadActive, setDownloadActive] = React.useState(false);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar style={{ background: "#2c2b30", height: "6vh" }}>
-          <MusicVideoIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" color="inherit" noWrap>
-            Spotube
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <CssBaseline backgroundColor="#2c2b30" />
       <main>
         <Box
           sx={{
             backgroundColor: "#2c2b30",
             backgroundImage: `radial-gradient(at -120% -1000%, #d6d6d6 10%, #2c2b30 90%)`,
-            pt: 8,
-            height: "93.2vh",
+            pt: 3,
+            minHeight: "100vh",
           }}
         >
           <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="secondary"
-              gutterBottom
+            <Box
+              sx={{
+                color: theme.palette.secondary.main,
+                fontSize: "4em",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
             >
-              Spotube
-            </Typography>
+              <Typewriter
+                words={["Spotube"]}
+                cursor
+                cursorStyle="_"
+                typeSpeed={100}
+                delaySpeed={1000}
+                margin= 'auto 0'
 
+              />
+            </Box>
             <Typography
               variant="h5"
               align="center"

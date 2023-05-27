@@ -22,7 +22,6 @@ class Download(APIView):
     parser_classes = [JSONParser]
 
     def post(self, request):
-        print("POST Request Received")
         data = json.loads(request.body)
         user_id = data['user_id']
         print(data['playlist_link'])
@@ -40,13 +39,26 @@ class Download(APIView):
         return HttpResponse("Download for user " + user_id + " started!")
     
 def get_progress(request, user_id):
-    print("GET Request Received")
     return HttpResponse(downloaders[user_id].get_progress())
+
+def get_progress_percentage(request, user_id):
+    downloader = downloaders[user_id]
+    return HttpResponse(downloader.get_progress() / downloader.get_total() * 100)
 
 def get_songs(request, user_id):
-    print("GET Request Received")
-    return HttpResponse(downloaders[user_id].get_progress())
+    zip_file = zipfile.ZipFile('songs' + user_id + '.zip', 'w')
+    for root, dirs, files in os.walk('songs' + user_id):
+        for file in files:
+            zip_file.write(os.path.join(root, file))
+    zip_file.close()
 
+    zip_file_path = './songs' + user_id + '.zip'
+    with open(zip_file_path, 'rb') as zip:
+        response = HttpResponse(zip.read())
+        response['content_type'] = 'application/zip'
+        response['Content-Disposition'] = 'attachment; filename="songs' + user_id + '.zip"'
+        return response
+    
 # Create your views here.
 
 def home(request):

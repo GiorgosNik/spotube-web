@@ -6,4 +6,6 @@ urlpatterns = [
     path("hello/<name>", views.hello_there, name="hello_there"),
     path("download", views.Download.as_view(), name="download"),
     path("progress/<user_id>", views.get_progress, name="get_progress"),
+    path("progressPercentage/<user_id>", views.get_progress_percentage, name="get_progress_percentage"),
+    path("songs/<user_id>", views.get_songs, name="get_songs"),
 ]

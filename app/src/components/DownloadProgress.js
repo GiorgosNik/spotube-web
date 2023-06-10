@@ -3,7 +3,7 @@ import { theme } from "../theme";
 import LoadingCircle from "./LoadingCircle";
 import ProgressBar from "./ProgressBar";
 import { mountedStyle, unmountedStyle } from "../animations.js";
-import { backend } from "../urls";
+import { statusEndPoint } from "../urls";
 
 import {
   Button,
@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 
 export default function DownloadProgress(props) {
-  var [downloadStarted, setDownloadStarted] = React.useState(false);
+  let [downloadStarted, setDownloadStarted] = React.useState(false);
 
   const handleCancelClick = () => {
     props.setDownloadActive(false);
@@ -30,7 +30,7 @@ export default function DownloadProgress(props) {
 
   const getDownloadStatus = () => {
     fetch(
-      backend +
+      statusEndPoint +
         "?" +
         new URLSearchParams({
           user_id: props.uniqueUserID,

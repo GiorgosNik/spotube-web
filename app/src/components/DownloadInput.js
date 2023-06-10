@@ -5,7 +5,7 @@ import { DropdownMenu } from "./DropdownMenu";
 import { StyledTextField } from "../styledComponents/StyledTextField";
 import { StyledArrowIconButton } from "../styledComponents/StyledArrowIconButton";
 import { validateLinkFormat } from "../utils/urlValidator";
-import { backend } from "../urls";
+import { downloadEndPoint } from "../urls";
 
 import {
   Button,
@@ -49,7 +49,7 @@ export default function DownloadInput(props) {
         }),
         headers: { "Content-Type": "application/json" },
       };
-      fetch(backend, requestOptions)
+      fetch(downloadEndPoint, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);

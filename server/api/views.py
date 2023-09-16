@@ -23,40 +23,45 @@ class Download(APIView):
 
     def post(self, request):
         data = json.loads(request.body)
-        user_id = data['user_id']
+        session_id = data['session_id']
         print(data['playlist_link'])
-        print(user_id)
+        print(session_id)
 
         downloader = Downloader(
             str(os.getenv('SPOTIFY_CLIENT_ID')),
             str(os.getenv('SPOTIFY_CLIENT_SECRET')),
             str(os.getenv('GENIUS_API_KEY')),
-            "songs" + user_id,
+            "./songs/" + session_id,
             True
         )
-        downloaders[user_id] = downloader
+        downloaders[session_id] = downloader
         downloader.start_downloader(data['playlist_link'])
-        return HttpResponse("Download for user " + user_id + " started!")
-    
-def get_progress(request, user_id):
-    return HttpResponse(downloaders[user_id].get_progress())
+        return HttpResponse("Download for user " + session_id + " started!")
 
-def get_progress_percentage(request, user_id):
-    downloader = downloaders[user_id]
-    return HttpResponse(downloader.get_progress() / downloader.get_total() * 100)
+def get_status(request, session_id):
+    downloader = downloaders[session_id]
+    status_info = {
+        "progress": downloader.get_progress(),
+        "progressPercentage": downloader.get_progress() / downloader.get_total() * 100,
+        "total": downloader.get_total(),
+        "failed": downloader.get_fail_counter(),
+        "succeeded": downloader.get_success_counter(),
+        "ETA": downloader.get_eta(),
+    }
+    return HttpResponse(status_info)
 
-def get_songs(request, user_id):
-    zip_file = zipfile.ZipFile('songs' + user_id + '.zip', 'w')
-    for root, dirs, files in os.walk('songs' + user_id):
+def get_songs(request, session_id):
+    zip_file = zipfile.ZipFile('songs' + session_id + '.zip', 'w')
+    for root, dirs, files in os.walk('songs' + session_id):
         for file in files:
             zip_file.write(os.path.join(root, file))
     zip_file.close()
 
-    zip_file_path = './songs' + user_id + '.zip'
+    zip_file_path = './songs' + session_id + '.zip'
     with open(zip_file_path, 'rb') as zip:
         response = HttpResponse(zip.read())
         response['content_type'] = 'application/zip'
-        response['Content-Disposition'] = 'attachment; filename="songs' + user_id + '.zip"'
+        response['Content-Disposition'] = 'attachment; filename="songs' + session_id + '.zip"'
         return response
     
 # Create your views here.

@@ -45,7 +45,7 @@ export default function DownloadInput(props) {
         method: "POST",
         body: JSON.stringify({
           playlist_link: playlist_link,
-          user_id: props.uniqueUserID,
+          session_id: props.uniqueUserID,
         }),
         headers: { "Content-Type": "application/json" },
       };

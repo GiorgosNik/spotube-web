@@ -5,7 +5,7 @@ import { DropdownMenu } from "./DropdownMenu";
 import { StyledTextField } from "../styledComponents/StyledTextField";
 import { StyledArrowIconButton } from "../styledComponents/StyledArrowIconButton";
 import { validateLinkFormat } from "../utils/urlValidator";
-import { downloadEndPoint } from "../urls";
+import { downloadRequest } from "../requests/api";
 
 import {
   Button,
@@ -39,25 +39,15 @@ export default function DownloadInput(props) {
     }
   };
 
-  const sendDownloadRequest = () => {
+  const sendDownloadRequest = async () => {
     if (validateURL()) {
-      const requestOptions = {
-        method: "POST",
-        body: JSON.stringify({
-          playlist_link: playlist_link,
-          session_id: props.uniqueUserID,
-        }),
-        headers: { "Content-Type": "application/json" },
-      };
-      fetch(downloadEndPoint, requestOptions)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          props.setDownloadActive(true);
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
+      try {
+        const response = await downloadRequest(playlist_link, props.uniqueUserID);
+        console.log(response);
+        props.setDownloadActive(true);
+      } catch (error) {
+        console.error(error.message);
+      }
     }
   };
 

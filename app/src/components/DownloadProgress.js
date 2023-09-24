@@ -3,7 +3,7 @@ import { theme } from "../theme";
 import LoadingCircle from "./LoadingCircle";
 import ProgressBar from "./ProgressBar";
 import { mountedStyle, unmountedStyle } from "../animations.js";
-import { statusEndPoint } from "../urls";
+import { fetchStatus } from "../requests/api";
 
 import {
   Button,
@@ -28,24 +28,11 @@ export default function DownloadProgress(props) {
 
   const [progress, setProgress] = React.useState(0);
 
-  const getDownloadStatus = () => {
-    fetch(
-      statusEndPoint +
-        "?" +
-        new URLSearchParams({
-          user_id: props.uniqueUserID,
-        })
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status > 0) {
-          setDownloadStarted(true);
-          setProgress(data.status);
-        }
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+  const  getDownloadStatus  = async () => {
+    const response = await fetchStatus(props.uniqueUserID);
+    console.log(response);
+          // setDownloadStarted(true);
+          // setProgress(data.status);
   };
 
   React.useEffect(() => {

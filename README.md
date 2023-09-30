@@ -24,5 +24,5 @@ pip install --upgrade xxx
 
 Start the server
 ```
-cd server & python3 manage.py runserver
+cd server & python manage.py runserver
 ```

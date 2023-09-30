@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 import os
 import zipfile
+import shutil
 # from django.views.decorators.csrf import csrf_protect
 # from django.middleware.csrf import get_token
 
@@ -68,21 +69,24 @@ def get_status(request, session_id):
 
 
 def get_songs(request, session_id):
-    zip_file = zipfile.ZipFile('songs' + session_id + '.zip', 'w')
-    for root, dirs, files in os.walk('songs' + session_id):
+    zip_file_path = './songs' + session_id + '.zip'
+    zip_file = zipfile.ZipFile(zip_file_path, 'w')
+    for root, dirs, files in os.walk('songs/' + session_id):
         for file in files:
             zip_file.write(os.path.join(root, file))
     zip_file.close()
 
-    zip_file_path = './songs' + session_id + '.zip'
+    
     with open(zip_file_path, 'rb') as zip:
-        del downloaders[session_id] # Remove downloader from dictionary
         response = HttpResponse(zip.read())
         response['content_type'] = 'application/zip'
         response['Content-Disposition'] = 'attachment; filename="songs' + session_id + '.zip"'
-        return response
-    
-# Create your views here.
+
+    os.remove(zip_file_path)
+    shutil.rmtree(os.path.join('songs/' + session_id), ignore_errors = True)
+    del downloaders[session_id] # Remove downloader from dictionary
+
+    return response
 
 def home(request):
     return HttpResponse("Hello, Django!")

@@ -31,8 +31,7 @@ export default function DownloadProgress(props) {
   const  getDownloadStatus  = async () => {
     const response = await fetchStatus(props.uniqueUserID);
     console.log(response);
-          // setDownloadStarted(true);
-          // setProgress(data.status);
+    setDownloadStarted(true);
   };
 
   React.useEffect(() => {

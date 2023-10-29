@@ -1,18 +1,16 @@
 import json
 import os
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.timezone import datetime
 import re
-from spotube import downloader as Downloader
+from spotube import download_manager as Downloader
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 import os
 import zipfile
 import shutil
-# from django.views.decorators.csrf import csrf_protect
-# from django.middleware.csrf import get_token
 
 from dotenv import load_dotenv
 load_dotenv()  # loads the configs from .env
@@ -63,9 +61,9 @@ def get_status(request, session_id):
             "succeeded": downloader.get_success_counter(),
             "ETA": downloader.get_eta(),
         }
-        return HttpResponse(status_info)
-    except TypeError:
-        return HttpResponse("Unable to cast to Downloader", status = 400) 
+        return JsonResponse(status_info, safe = False)
+    except KeyError:
+        return JsonResponse("Unable to cast to Downloader", status = 400) 
 
 
 def get_songs(request, session_id):

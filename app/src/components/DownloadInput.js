@@ -42,8 +42,7 @@ export default function DownloadInput(props) {
   const sendDownloadRequest = async () => {
     if (validateURL()) {
       try {
-        const response = await downloadRequest(playlist_link, props.uniqueUserID);
-        console.log(response);
+        await downloadRequest(playlist_link, props.uniqueUserID);
         props.setDownloadActive(true);
       } catch (error) {
         console.error(error.message);

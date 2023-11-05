@@ -26,3 +26,8 @@ Start the server
 ```
 cd server & python manage.py runserver
 ```
+
+Run tests
+```
+python manage.py test api.tests.api_tests
+```

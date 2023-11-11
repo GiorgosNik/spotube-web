@@ -1,0 +1,42 @@
+name: build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt install software-properties-common
+          sudo apt update
+          sudo add-apt-repository ppa:jonathonf/ffmpeg-4
+          sudo apt install ffmpeg
+
+      - name: Install jq
+        run: |
+          sudo apt install jq
+
+      - name: Install Project dependencies
+        uses: py-actions/py-dependency-install@v4
+
+      - name: Install testing dependencies
+        run: |
+          cd server
+          python -m pip install --upgrade pip
+          pip install pylint pytest pytest-cov selenium playwright
+
+      - name: Running pytest
+        run: |
+          cd server
+          python manage.py test api.tests.api_tests
+
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: code-coverage
+      #     path: htmlcov

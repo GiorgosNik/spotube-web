@@ -35,6 +35,11 @@ jobs:
           pip install pylint pytest pytest-cov selenium playwright
 
       - name: Running pytest
+      - shell: bash
+        env:
+          GENIUS_API_KEY: ${{ secrets.GENIUS_API_KEY }}
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
         run: |
           cd server
           python manage.py test api.tests.api_tests

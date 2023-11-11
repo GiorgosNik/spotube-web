@@ -23,7 +23,10 @@ jobs:
           sudo apt install jq
 
       - name: Install Project dependencies
-        uses: py-actions/py-dependency-install@v4
+        run: |
+          cd server
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Install testing dependencies
         run: |

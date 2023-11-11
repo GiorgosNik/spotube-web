@@ -1,10 +1,10 @@
 import json
 import os
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.timezone import datetime
 import re
-from spotube import DownloadManager as DownloadManager
+from spotube import DownloadManager as Downloader
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
@@ -26,7 +26,7 @@ class Download(APIView):
         print(data['playlist_link'])
         print(session_id)
 
-        downloader = DownloadManager(
+        downloader = Downloader(
             str(os.getenv('SPOTIFY_CLIENT_ID')),
             str(os.getenv('SPOTIFY_CLIENT_SECRET')),
             str(os.getenv('GENIUS_API_KEY')),
@@ -46,30 +46,25 @@ class CancelDownload(APIView):
             session_id = data['session_id']
             downloader = downloaders[session_id]
             downloader.cancel_downloader()
-            return HttpResponse("Cancel download for user " + session_id + " started!")
+            return JsonResponse("Cancel download for user " + session_id + " started!", safe = False)
         except Exception as e:
-            return HttpResponse(e, status = 400) 
+            return JsonResponse(e, status = 400) 
 
 def get_status(request, session_id):
     try:
         downloader = downloaders[session_id]
-        if downloader.get_total() == 0:
-            total = 1
-        else:
-            total = downloader.get_total()
+        total = 1 if downloader.get_total() == 0 else downloader.get_total()
         status_info = {
             "progress": downloader.get_progress(),
             "progressPercentage": downloader.get_progress() / total * 100,
-            "total": downloader.get_total(),
+            "total": total,
             "failed": downloader.get_fail_counter(),
             "succeeded": downloader.get_success_counter(),
             "ETA": downloader.get_eta(),
         }
-        print(status_info)
-        return HttpResponse(status_info)
-    except Exception as e:
-        print(str(e))
-        return HttpResponse(str(e), status = 400) 
+        return JsonResponse(status_info, safe = False)
+    except KeyError:
+        return JsonResponse("Unable to cast to Downloader", status = 400) 
 
 
 def get_songs(request, session_id):

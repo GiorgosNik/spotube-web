@@ -23,6 +23,7 @@ class Download(APIView):
     def post(self, request):
         data = json.loads(request.body)
         session_id = data['session_id']
+        normalize_volume = data['normalize_volume']
         print(data['playlist_link'])
         print(session_id)
 
@@ -31,7 +32,8 @@ class Download(APIView):
             str(os.getenv('SPOTIFY_CLIENT_SECRET')),
             str(os.getenv('GENIUS_API_KEY')),
             "./songs/" + session_id,
-            False
+            False,
+            normalize_volume
         )
         downloaders[session_id] = downloader
         downloader.start_downloader(data['playlist_link'])

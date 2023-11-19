@@ -6,6 +6,7 @@ import { StyledTextField } from "../styledComponents/StyledTextField";
 import { StyledArrowIconButton } from "../styledComponents/StyledArrowIconButton";
 import { validateLinkFormat } from "../utils/urlValidator";
 import { downloadRequest } from "../requests/api";
+import PropTypes from "prop-types";
 
 import {
   Button,

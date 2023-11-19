@@ -1,6 +1,7 @@
 import * as React from "react";
 import { theme } from "../theme";
 import { StyledSwitch } from "../styledComponents/StyledSwitch";
+import PropTypes from 'prop-types'
 
 import {
   FormControlLabel,
@@ -18,7 +19,7 @@ export default function DropdownMenu(props) {
     normalizeAudio: PropTypes.bool.isRequired,
     setNormalizeAudio: PropTypes.func.isRequired,
   };
-  
+
   const handleDownloadLyricsSwitch = () => {
     props.setDownloadLyrics(!props.downloadLyrics);
   };

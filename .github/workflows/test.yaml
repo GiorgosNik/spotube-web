@@ -5,38 +5,31 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GENIUS_API_KEY: ${{ secrets.GENIUS_API_KEY }}
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
     steps:
-      - shell: bash
-        env:
-          GENIUS_API_KEY: ${{ secrets.GENIUS_API_KEY }}
-          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
-          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: Install ffmpeg
+      - name: Install dependencies
         run: |
-          sudo apt install software-properties-common
           sudo apt update
           sudo add-apt-repository ppa:jonathonf/ffmpeg-4
-          sudo apt install ffmpeg
+          sudo apt install -y software-properties-common ffmpeg jq
 
-      - name: Install jq
+      - name: Setup project environment
         run: |
-          sudo apt install jq
-
-      - name: Install Project dependencies
-        run: |
-          cd server
           python -m pip install --upgrade pip
+          cd server
           pip install -r requirements.txt
 
       - name: Install testing dependencies
         run: |
           cd server
-          python -m pip install --upgrade pip
           pip install pylint pytest pytest-cov selenium playwright
 
       - name: Running pytest
@@ -44,6 +37,7 @@ jobs:
           cd server
           python manage.py test api.tests.api_tests
 
+      # Uncomment the below lines if you want to upload the code coverage report
       # - uses: actions/upload-artifact@v3
       #   with:
       #     name: code-coverage

@@ -23,6 +23,7 @@ class Download(APIView):
     def post(self, request):
         data = json.loads(request.body)
         session_id = data['session_id']
+        normalize_volume = data['normalize_volume']
         print(data['playlist_link'])
         print(session_id)
 
@@ -31,7 +32,8 @@ class Download(APIView):
             str(os.getenv('SPOTIFY_CLIENT_SECRET')),
             str(os.getenv('GENIUS_API_KEY')),
             "./songs/" + session_id,
-            True
+            False,
+            normalize_volume
         )
         downloaders[session_id] = downloader
         downloader.start_downloader(data['playlist_link'])
@@ -46,6 +48,10 @@ class CancelDownload(APIView):
             session_id = data['session_id']
             downloader = downloaders[session_id]
             downloader.cancel_downloader()
+
+            shutil.rmtree(os.path.join('songs/' + session_id), ignore_errors = True)
+            del downloaders[session_id] # Remove downloader from dictionary
+
             return JsonResponse("Cancel download for user " + session_id + " started!", safe = False)
         except Exception as e:
             return JsonResponse(e, status = 400) 
@@ -74,7 +80,6 @@ def get_songs(request, session_id):
         for file in files:
             zip_file.write(os.path.join(root, file))
     zip_file.close()
-
     
     with open(zip_file_path, 'rb') as zip:
         response = HttpResponse(zip.read())

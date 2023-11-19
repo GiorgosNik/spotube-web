@@ -1,7 +1,7 @@
 import * as React from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { theme } from "../theme";
-import { DropdownMenu } from "./DropdownMenu";
+import DropdownMenu from "./DropdownMenu";
 import { StyledTextField } from "../styledComponents/StyledTextField";
 import { StyledArrowIconButton } from "../styledComponents/StyledArrowIconButton";
 import { validateLinkFormat } from "../utils/urlValidator";
@@ -18,9 +18,16 @@ import {
 } from "@mui/material";
 
 export default function DownloadInput(props) {
+  DownloadInput.propTypes = {
+    uniqueUserID: PropTypes.string.isRequired,
+    setDownloadActive: PropTypes.func.isRequired,
+  };
+
   let [checked, setChecked] = React.useState(false);
   let [playlist_link, setPlaylistLink] = React.useState("");
   let [inputErrorMessage, setInputErrorMessage] = React.useState("");
+  let [downloadLyrics, setDownloadLyrics] = React.useState(true);
+  let [normalizeAudio, setNormalizeAudio] = React.useState(true);
 
   const handleArrowButtonClick = () => {
     setChecked((prev) => !prev);
@@ -42,7 +49,7 @@ export default function DownloadInput(props) {
   const sendDownloadRequest = async () => {
     if (validateURL()) {
       try {
-        await downloadRequest(playlist_link, props.uniqueUserID);
+        await downloadRequest(playlist_link, props.uniqueUserID, downloadLyrics, normalizeAudio);
         props.setDownloadActive(true);
       } catch (error) {
         console.error(error.message);
@@ -55,12 +62,15 @@ export default function DownloadInput(props) {
       <CssBaseline />
       <Box>
         <StyledTextField
-          error={(inputErrorMessage !== "")}
+          error={inputErrorMessage !== ""}
           inputProps={{ spellCheck: "false" }}
           helperText={inputErrorMessage}
           label="Link To Playlist"
           variant="outlined"
-          onChange={(e) => {setPlaylistLink(e.target.value); setInputErrorMessage("");} }
+          onChange={(e) => {
+            setPlaylistLink(e.target.value);
+            setInputErrorMessage("");
+          }}
           fullWidth
           autoComplete="off"
           InputProps={{ style: { color: theme.palette.primary.light } }}
@@ -90,7 +100,14 @@ export default function DownloadInput(props) {
           </Stack>
 
           <Container>
-            <Collapse in={checked}>{DropdownMenu}</Collapse>
+            <Collapse in={checked}>
+              <DropdownMenu
+                setDownloadLyrics={setDownloadLyrics}
+                downloadLyrics={downloadLyrics}
+                setNormalizeAudio={setNormalizeAudio}
+                normalizeAudio={normalizeAudio}
+              />
+            </Collapse>
           </Container>
         </Stack>
       </Box>

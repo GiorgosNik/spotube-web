@@ -36,9 +36,3 @@ jobs:
         run: |
           cd server
           python manage.py test api.tests.api_tests
-
-      # Uncomment the below lines if you want to upload the code coverage report
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: code-coverage
-      #     path: htmlcov

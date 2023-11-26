@@ -3,7 +3,8 @@ import { theme } from "../theme";
 import LoadingCircle from "./LoadingCircle";
 import ProgressBar from "./ProgressBar";
 import { mountedStyle, unmountedStyle } from "../animations.js";
-import { fetchStatus } from "../requests/api";
+import { fetchStatus, fetchArchive } from "../requests/api";
+import PropTypes from "prop-types";
 
 import {
   Button,
@@ -15,23 +16,29 @@ import {
 } from "@mui/material";
 
 export default function DownloadProgress(props) {
+  DownloadProgress.propTypes = {
+    uniqueUserID: PropTypes.string.isRequired,
+    setDownloadActive: PropTypes.func.isRequired,
+  };
+
   let [downloadStarted, setDownloadStarted] = React.useState(false);
 
   const handleCancelClick = () => {
     props.setDownloadActive(false);
   };
 
-  const handleStartDownload = () => {
-    setDownloadStarted(true);
-    setProgress(0);
+  const handleDownloadArchive = async () => {
+    window.open(`${process.env.REACT_APP_API_BASE_URL}/songs/${props.uniqueUserID}`, "_blank");
   };
 
   const [progress, setProgress] = React.useState(0);
 
-  const  getDownloadStatus  = async () => {
-    const response = await fetchStatus(props.uniqueUserID);
-    console.log(response);
-    setDownloadStarted(true);
+  const getDownloadStatus = async () => {
+    if (progress !== 100) {
+      const response = await fetchStatus(props.uniqueUserID);
+      setDownloadStarted(true);
+      setProgress(response.data["progressPercentage"]);
+    }
   };
 
   React.useEffect(() => {
@@ -82,9 +89,9 @@ export default function DownloadProgress(props) {
             <Button
               color="light_button"
               variant="outlined"
-              onClick={handleStartDownload}
+              onClick={handleDownloadArchive}
             >
-              [DEBUG] Start Download
+              Download Archive
             </Button>
           </Stack>
           <Container></Container>

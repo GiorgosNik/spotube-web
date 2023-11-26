@@ -3,7 +3,7 @@ import { theme } from "../theme";
 import LoadingCircle from "./LoadingCircle";
 import ProgressBar from "./ProgressBar";
 import { mountedStyle, unmountedStyle } from "../animations.js";
-import { fetchStatus, fetchArchive } from "../requests/api";
+import { fetchStatus } from "../requests/api";
 import PropTypes from "prop-types";
 
 import {
@@ -28,16 +28,28 @@ export default function DownloadProgress(props) {
   };
 
   const handleDownloadArchive = async () => {
-    window.open(`${process.env.REACT_APP_API_BASE_URL}/songs/${props.uniqueUserID}`, "_blank");
+    window.open(
+      `${process.env.REACT_APP_API_BASE_URL}/songs/${props.uniqueUserID}`,
+      "_blank"
+    );
+    props.setDownloadActive(false);
   };
 
   const [progress, setProgress] = React.useState(0);
+  const [succeeded, setSucceeded] = React.useState(0);
+  const [failed, setFailed] = React.useState(0);
+  const [eta, setETA] = React.useState("");
+  const [total, setTotal] = React.useState("");
 
   const getDownloadStatus = async () => {
     if (progress !== 100) {
       const response = await fetchStatus(props.uniqueUserID);
       setDownloadStarted(true);
       setProgress(response.data["progressPercentage"]);
+      setSucceeded(response.data["succeeded"]);
+      setFailed(response.data["failed"]);
+      setETA(response.data["ETA"]);
+      setTotal(response.data["total"]);
     }
   };
 
@@ -68,7 +80,13 @@ export default function DownloadProgress(props) {
           )}
           {downloadStarted && (
             <div style={downloadStarted ? mountedStyle : unmountedStyle}>
-              <ProgressBar progress={progress} />
+              <ProgressBar
+                progress={progress}
+                failed={failed}
+                succeeded={succeeded}
+                eta={eta}
+                total={total}
+              />
             </div>
           )}
         </Box>
@@ -90,6 +108,7 @@ export default function DownloadProgress(props) {
               color="light_button"
               variant="outlined"
               onClick={handleDownloadArchive}
+              disabled={progress !== 100}
             >
               Download Archive
             </Button>

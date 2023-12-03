@@ -28,7 +28,7 @@ jobs:
           source venv/bin/activate
       
       - name: Install dependencies
-      - run: |
+        run: |
           cd server
           pip install -r requirements.txt
 

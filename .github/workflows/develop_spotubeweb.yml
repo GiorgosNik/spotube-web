@@ -35,7 +35,7 @@ jobs:
       - name: Zip artifact for deployment
         run: |
           cp -r venv server
-          zip release.zip ./server/* -r
+          zip release.zip ./server -r
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3

@@ -26,5 +26,10 @@ COPY . .
 COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
+# Set environment variablesd
+ENV SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
+ENV SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
+ENV GENIUS_API_KEY=${GENIUS_API_KEY}
+
 # Specify the command to run on container start
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "server.wsgi:application"]

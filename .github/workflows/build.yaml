@@ -21,6 +21,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./server
+          context: ./server/
           push: true
           tags: lybrag1/spotube-web:latest

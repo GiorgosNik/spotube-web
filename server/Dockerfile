@@ -1,6 +1,10 @@
 # Use an official Ubuntu runtime as a parent image
 FROM ubuntu:20.04
 
+ARG  SPOTIFY_CLIENT_ID
+ARG  SPOTIFY_CLIENT_SECRET
+ARG  GENIUS_API_KEY
+
 # Set environment variables
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8

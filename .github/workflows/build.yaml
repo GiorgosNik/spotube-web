@@ -52,7 +52,7 @@ jobs:
       - name: Build image
         if: github.ref == 'refs/heads/docker' && !startsWith(github.ref, 'refs/tags/v')
         run: |
-          cd server/
+          cd server
           docker build -t ${{ secrets.REGISTRY_USERNAME }}/spotube-web:latest .
       
       - name: Push to DockerHub

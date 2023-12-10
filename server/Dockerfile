@@ -1,5 +1,5 @@
 # Use an official Ubuntu runtime as a parent image
-FROM ubuntu:20.04
+FROM ubuntu:latest
 
 ARG  SPOTIFY_CLIENT_ID
 ARG  SPOTIFY_CLIENT_SECRET

@@ -21,23 +21,30 @@ class Download(APIView):
     parser_classes = [JSONParser]
 
     def post(self, request):
-        data = json.loads(request.body)
-        session_id = data['session_id']
-        normalize_volume = data['normalize_volume']
-        print(data['playlist_link'])
-        print(session_id)
+        try: 
+            data = json.loads(request.body)
+            session_id = data['session_id']
+            normalize_volume = data['normalize_volume']
+            print(data['playlist_link'])
+            print(session_id)
 
-        downloader = Downloader(
-            str(os.getenv('SPOTIFY_CLIENT_ID')),
-            str(os.getenv('SPOTIFY_CLIENT_SECRET')),
-            str(os.getenv('GENIUS_API_KEY')),
-            "./songs/" + session_id,
-            False,
-            normalize_volume
-        )
-        downloaders[session_id] = downloader
-        downloader.start_downloader(data['playlist_link'])
-        return HttpResponse("Download for user " + session_id + " started!")
+            downloader = Downloader(
+                str(os.getenv('SPOTIFY_CLIENT_ID')),
+                str(os.getenv('SPOTIFY_CLIENT_SECRET')),
+                str(os.getenv('GENIUS_API_KEY')),
+                "./songs/" + session_id,
+                False,
+                normalize_volume
+            )
+            downloaders[session_id] = downloader
+            downloader.start_downloader(data['playlist_link'])
+            return HttpResponse("Download for user " + session_id + " started!")
+        except KeyError as ke:
+            return HttpResponse(f"ERROR: Missing key in request: {ke}", status = 400)
+        except json.JSONDecodeError:
+            return HttpResponse("ERROR: Invalid JSON format", status = 400)
+        except Exception as e:
+            return HttpResponse(f"ERROR: {e}", status = 400)
     
 class CancelDownload(APIView):
     parser_classes = [JSONParser]
@@ -53,11 +60,18 @@ class CancelDownload(APIView):
             del downloaders[session_id] # Remove downloader from dictionary
 
             return JsonResponse("Cancel download for user " + session_id + " started!", safe = False)
+        except KeyError as ke:
+            return JsonResponse(f"ERROR: Missing key in request: {ke}", status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse("ERROR: Invalid JSON format", status = 400)
         except Exception as e:
-            return JsonResponse(e, status = 400) 
+            return JsonResponse(f"ERROR: {e}", status = 400)
 
 def get_status(request, session_id):
     try:
+        if session_id not in downloaders:
+            return JsonResponse(f"No active download session found for user {session_id}", status=400)
+
         downloader = downloaders[session_id]
         total = 1 if downloader.get_total() == 0 else downloader.get_total()
         status_info = {
@@ -69,28 +83,38 @@ def get_status(request, session_id):
             "ETA": downloader.get_eta(),
         }
         return JsonResponse(status_info, safe = False)
-    except KeyError:
-        return JsonResponse("Unable to cast to Downloader", status = 400) 
+    except Exception as e:
+        return JsonResponse(f"ERROR: {e}", status = 400)
 
 
 def get_songs(request, session_id):
-    zip_file_path = './songs' + session_id + '.zip'
-    zip_file = zipfile.ZipFile(zip_file_path, 'w')
-    for root, dirs, files in os.walk('songs/' + session_id):
-        for file in files:
-            zip_file.write(os.path.join(root, file))
-    zip_file.close()
-    
-    with open(zip_file_path, 'rb') as zip:
-        response = HttpResponse(zip.read())
-        response['content_type'] = 'application/zip'
-        response['Content-Disposition'] = 'attachment; filename="songs' + session_id + '.zip"'
+    try: 
+        if session_id not in downloaders:
+            return HttpResponse(f"ERROR: No active download session found for user {session_id}", status = 400)
 
-    os.remove(zip_file_path)
-    shutil.rmtree(os.path.join('songs/' + session_id), ignore_errors = True)
-    del downloaders[session_id] # Remove downloader from dictionary
+        zip_file_path = './songs' + session_id + '.zip'
+        zip_file = zipfile.ZipFile(zip_file_path, 'w')
+        for root, dirs, files in os.walk('songs/' + session_id):
+            for file in files:
+                zip_file.write(os.path.join(root, file))
+        zip_file.close()
+        
+        with open(zip_file_path, 'rb') as zip:
+            response = HttpResponse(zip.read())
+            response['content_type'] = 'application/zip'
+            response['Content-Disposition'] = 'attachment; filename="songs' + session_id + '.zip"'
 
-    return response
+        os.remove(zip_file_path)
+        shutil.rmtree(os.path.join('songs/' + session_id), ignore_errors = True)
+        del downloaders[session_id] # Remove downloader from dictionary
+
+        return response
+    except FileNotFoundError:
+        return HttpResponse(f"ERROR: File not found: {zip_file_path}", status=400)
+    except OSError as e:
+        return HttpResponse(f"ERROR: OS error occurred: {e}", status=400)
+    except Exception as e:
+        return HttpResponse(f"ERROR: {e}", status=400)
 
 def home(request):
     return HttpResponse("Hello, Django!")

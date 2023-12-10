@@ -37,7 +37,7 @@ jobs:
           python manage.py test api.tests.api_tests
           
   Docker:
-    needs: test
+    needs: Test
     runs-on: ubuntu-latest
     env:
       GENIUS_API_KEY: ${{ secrets.GENIUS_API_KEY }}
@@ -89,5 +89,5 @@ jobs:
         app-name: 'SpotubeWeb'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_3e189a110a5e4066a5fd5ecce7958736 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_e882a4bd053e445bae0c8b8303e2858d }}/${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_e882a4bd053e445bae0c8b8303e2858d }}/spotube-web:latest'
         

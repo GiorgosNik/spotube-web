@@ -1,5 +1,5 @@
 # Use an official Ubuntu runtime as a parent image
-FROM ubuntu:latest
+FROM ubuntu:20.04
 
 # Set environment variables
 ENV LANG=C.UTF-8 \

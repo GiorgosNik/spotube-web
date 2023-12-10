@@ -1,0 +1,68 @@
+name: Test and Build
+on: push
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    env:
+      GENIUS_API_KEY: ${{ secrets.GENIUS_API_KEY }}
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo add-apt-repository ppa:jonathonf/ffmpeg-4
+          sudo apt install -y software-properties-common ffmpeg jq
+
+      - name: Setup project environment
+        run: |
+          python -m pip install --upgrade pip
+          cd server
+          pip install -r requirements.txt
+
+      - name: Install testing dependencies
+        run: |
+          cd server
+          pip install pylint pytest pytest-cov selenium playwright
+
+      - name: Running pytest
+        run: |
+          cd server
+          python manage.py test api.tests.api_tests
+          
+  Docker:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      GENIUS_API_KEY: ${{ secrets.GENIUS_API_KEY }}
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image
+        if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
+        run: |
+          cd server
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest --build-arg GENIUS_API_KEY=${{ secrets.GENIUS_API_KEY }} --build-arg SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }} --build-arg SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }} .
+      
+      - name: Push to DockerHub
+        if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest
+          

@@ -2,6 +2,7 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://giorgosnik.github.io/spotube-web",
   "config": {
     "legacy-peer-deps": true
   },

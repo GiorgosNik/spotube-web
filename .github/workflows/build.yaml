@@ -1,5 +1,12 @@
 name: Test and Build
-on: push
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - '*'
 
 jobs:
   Test:
@@ -37,6 +44,7 @@ jobs:
           python manage.py test api.tests.api_tests
           
   Docker:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     needs: Test
     runs-on: ubuntu-latest
     env:

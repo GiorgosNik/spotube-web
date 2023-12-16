@@ -73,4 +73,29 @@ jobs:
         if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest
-          
+
+  AzureDeploy:
+    runs-on: ubuntu-latest
+    needs: Docker
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://index.docker.io/v1/
+        username: ${{ secrets.AzureAppService_ContainerUsername_e882a4bd053e445bae0c8b8303e2858d }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_34a9f175e61d480fa812f22634b22717 }}
+
+    - name: Deploy to Azure Web App
+      if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'SpotubeWeb'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_3e189a110a5e4066a5fd5ecce7958736 }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_e882a4bd053e445bae0c8b8303e2858d }}/spotube-web:latest'
+        

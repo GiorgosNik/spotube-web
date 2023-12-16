@@ -1,6 +1,8 @@
 # Use an official Ubuntu runtime as a parent image
 FROM ubuntu:latest
 
+EXPOSE 8000
+
 ARG  SPOTIFY_CLIENT_ID
 ARG  SPOTIFY_CLIENT_SECRET
 ARG  GENIUS_API_KEY

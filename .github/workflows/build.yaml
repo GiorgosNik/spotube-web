@@ -98,7 +98,7 @@ jobs:
         images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_e882a4bd053e445bae0c8b8303e2858d }}/spotube-web:latest'
         
   GithubPagesDeploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     env:
       REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}

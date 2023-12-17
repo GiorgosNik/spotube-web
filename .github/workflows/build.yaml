@@ -45,6 +45,7 @@ jobs:
           
   Docker:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: Test
     runs-on: ubuntu-latest
     env:
       GENIUS_API_KEY: ${{ secrets.GENIUS_API_KEY }}
@@ -100,7 +101,6 @@ jobs:
   GithubPagesDeploy:
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    needs: Docker
     env:
       REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}
 

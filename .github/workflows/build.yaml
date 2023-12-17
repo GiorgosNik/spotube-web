@@ -118,7 +118,6 @@ jobs:
           cd app
           npm install --force
 
-      - name: Deploy
-        run: |
-          npm run deploy
+      - name: Deploy react app to github pages
+      uses: tanwanimohit/deploy-react-to-ghpages@v1.0.2
   

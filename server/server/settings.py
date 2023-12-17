@@ -54,7 +54,13 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://giorgosnik.github.io'
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'https://giorgosnik.github.io'
 ]
 
 ROOT_URLCONF = 'server.urls'

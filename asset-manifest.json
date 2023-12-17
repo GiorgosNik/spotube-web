@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/spotube-web/static/css/main.0d18c856.css",
-    "main.js": "/spotube-web/static/js/main.aca7816d.js",
+    "main.js": "/spotube-web/static/js/main.5d0391a6.js",
     "index.html": "/spotube-web/index.html",
     "main.0d18c856.css.map": "/spotube-web/static/css/main.0d18c856.css.map",
-    "main.aca7816d.js.map": "/spotube-web/static/js/main.aca7816d.js.map"
+    "main.5d0391a6.js.map": "/spotube-web/static/js/main.5d0391a6.js.map"
   },
   "entrypoints": [
     "static/css/main.0d18c856.css",
-    "static/js/main.aca7816d.js"
+    "static/js/main.5d0391a6.js"
   ]
 }

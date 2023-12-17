@@ -44,7 +44,7 @@ jobs:
           python manage.py test api.tests.api_tests
           
   Docker:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: Test
     runs-on: ubuntu-latest
     env:
@@ -64,17 +64,16 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build image
-        if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
         run: |
           cd server
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest --build-arg GENIUS_API_KEY=${{ secrets.GENIUS_API_KEY }} --build-arg SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }} --build-arg SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }} .
       
       - name: Push to DockerHub
-        if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest
 
   AzureDeploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: Docker
     environment:
@@ -90,7 +89,6 @@ jobs:
         password: ${{ secrets.AzureAppService_ContainerPassword_34a9f175e61d480fa812f22634b22717 }}
 
     - name: Deploy to Azure Web App
-      if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
@@ -99,3 +97,28 @@ jobs:
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_3e189a110a5e4066a5fd5ecce7958736 }}
         images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_e882a4bd053e445bae0c8b8303e2858d }}/spotube-web:latest'
         
+
+  GithubPagesDeploy:
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: Docker
+    env:
+      REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}
+
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          cd app
+          npm install
+
+      - name: Deploy
+        run: |
+          npm run deploy
+  

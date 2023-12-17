@@ -119,5 +119,6 @@ jobs:
           npm install --force
 
       - name: Deploy react app to github pages
-      uses: tanwanimohit/deploy-react-to-ghpages@v1.0.2
+        uses: tanwanimohit/deploy-react-to-ghpages@v1.0.1
+
   

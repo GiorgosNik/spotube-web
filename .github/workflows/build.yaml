@@ -120,6 +120,6 @@ jobs:
 
       - name: Deploy
         run: |
-          cp add
+          cd add
           npm run deploy
   

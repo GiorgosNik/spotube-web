@@ -118,6 +118,6 @@ jobs:
 
       - name: Deploy
         run: |
-          cd add
+          cd app
           npm run deploy
   

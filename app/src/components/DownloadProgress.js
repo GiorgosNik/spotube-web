@@ -48,7 +48,7 @@ export default function DownloadProgress(props) {
       setProgress(response.data["progressPercentage"]);
       setSucceeded(response.data["succeeded"]);
       setFailed(response.data["failed"]);
-      setETA(response.data["ETA"]);
+      setETA((response.data["ETA"] !== null ? response.data["ETA"] : 0).toString());
       setTotal(response.data["total"]);
     }
   };

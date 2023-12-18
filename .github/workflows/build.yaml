@@ -115,7 +115,7 @@ jobs:
       - name: Install dependencies
         run: |
           cp -r ./app/* .
-          npm install --force
+          npm install --legacy-peer-deps
           
       - name: Build and Deploy React app to GitHub Pages
         uses: omkartapale/react-deployment-gh-pages@v1.0.0

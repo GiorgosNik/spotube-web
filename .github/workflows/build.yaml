@@ -114,7 +114,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cp -r app .
+          cp -r ./app/* .
           npm install --force
           
       - name: Build and Deploy React app to GitHub Pages

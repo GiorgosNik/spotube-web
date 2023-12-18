@@ -117,15 +117,6 @@ jobs:
           cd app
           npm install --force
           
-      - name: Login to git
-        run: |
-          git config --global user.name ${{ secrets.GIT_USERNAME }}
-          git config --global user.email ${{ secrets.GIT_EMAIL }}
-          git config --global user.password ${{ secrets.GIT_TOKEN }}
-          git config --global credential.helper store
-
-      - name: Deploy
-        run: |
-          cd app
-          npm run deploy
+      - name: Build and Deploy React app to GitHub Pages
+        uses: omkartapale/react-deployment-gh-pages@v1.0.0
   

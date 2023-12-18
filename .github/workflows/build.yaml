@@ -116,6 +116,13 @@ jobs:
         run: |
           cd app
           npm install --force
+          
+      - name: Login to git
+        run: |
+          git config --global user.name ${{ secrets.GIT_USERNAME }}
+          git config --global user.email ${{ secrets.GIT_EMAIL }}
+          git config --global user.password ${{ secrets.GIT_TOKEN }}
+          git config --global credential.helper store
 
       - name: Deploy
         run: |

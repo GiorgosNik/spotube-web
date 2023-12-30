@@ -16,6 +16,8 @@ jobs:
       GENIUS_API_KEY: ${{ secrets.GENIUS_API_KEY }}
       SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
       SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      SONG_NUMBER_LIMIT: ${{ secrets.SONG_NUMBER_LIMIT }}
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -52,6 +54,8 @@ jobs:
       GENIUS_API_KEY: ${{ secrets.GENIUS_API_KEY }}
       SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
       SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      SONG_NUMBER_LIMIT: ${{ secrets.SONG_NUMBER_LIMIT }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -103,6 +107,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}
+      SONG_NUMBER_LIMIT: ${{ secrets.SONG_NUMBER_LIMIT }}
 
     steps:
       - name: Use Node.js

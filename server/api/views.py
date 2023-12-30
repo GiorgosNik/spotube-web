@@ -25,8 +25,6 @@ class Download(APIView):
             data = json.loads(request.body)
             session_id = data['session_id']
             normalize_volume = data['normalize_volume']
-            print(data['playlist_link'])
-            print(session_id)
 
             downloader = Downloader(
                 str(os.getenv('SPOTIFY_CLIENT_ID')),
@@ -35,7 +33,7 @@ class Download(APIView):
                 "./songs/" + session_id,
                 False,
                 normalize_volume,
-                50
+                str(os.getenv('SONG_NUMBER_LIMIT'))
             )
             downloaders[session_id] = downloader
             downloader.start_downloader(data['playlist_link'])

@@ -25,8 +25,6 @@ class Download(APIView):
             data = json.loads(request.body)
             session_id = data['session_id']
             normalize_volume = data['normalize_volume']
-            print(data['playlist_link'])
-            print(session_id)
 
             downloader = Downloader(
                 str(os.getenv('SPOTIFY_CLIENT_ID')),
@@ -35,7 +33,7 @@ class Download(APIView):
                 "./songs/" + session_id,
                 False,
                 normalize_volume,
-                50
+                int(str(os.getenv('SONG_NUMBER_LIMIT')))
             )
             downloaders[session_id] = downloader
             downloader.start_downloader(data['playlist_link'])
@@ -62,16 +60,16 @@ class CancelDownload(APIView):
 
             return JsonResponse("Cancel download for user " + session_id + " started!", safe = False)
         except KeyError as ke:
-            return JsonResponse(f"ERROR: Missing key in request: {ke}", status = 400)
+            return HttpResponse(f"ERROR: Missing key in request: {ke}", status = 400)
         except json.JSONDecodeError:
-            return JsonResponse("ERROR: Invalid JSON format", status = 400)
+            return HttpResponse("ERROR: Invalid JSON format", status = 400)
         except Exception as e:
-            return JsonResponse(f"ERROR: {e}", status = 400)
+            return HttpResponse(f"ERROR: {e}", status = 400)
 
 def get_status(request, session_id):
     try:
         if session_id not in downloaders:
-            return JsonResponse(f"No active download session found for user {session_id}", status=400)
+            return HttpResponse(f"No active download session found for user {session_id}", status=400)
 
         downloader = downloaders[session_id]
         total = 1 if downloader.get_total() == 0 else downloader.get_total()
@@ -85,7 +83,7 @@ def get_status(request, session_id):
         }
         return JsonResponse(status_info, safe = False)
     except Exception as e:
-        return JsonResponse(f"ERROR: {e}", status = 400)
+        return HttpResponse(f"ERROR: {e}", status = 400)
 
 
 def get_songs(request, session_id):

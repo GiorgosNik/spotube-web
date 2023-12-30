@@ -42,6 +42,13 @@ export default function ProgressBar(props) {
           </Typography>
         </Box>
       )}
+      {props.total === 50 && (
+        <Box>
+          <Typography align="center" color="primary.contrastText" paragraph>
+            The downloader is limited to 50 songs per playlist.
+          </Typography>
+        </Box>
+      )}
     </Stack>
   );
 }

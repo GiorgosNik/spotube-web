@@ -34,7 +34,8 @@ class Download(APIView):
                 str(os.getenv('GENIUS_API_KEY')),
                 "./songs/" + session_id,
                 False,
-                normalize_volume
+                normalize_volume,
+                50
             )
             downloaders[session_id] = downloader
             downloader.start_downloader(data['playlist_link'])

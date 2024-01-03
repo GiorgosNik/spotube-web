@@ -71,7 +71,7 @@ jobs:
       - name: Build image
         run: |
           cd server
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest --build-arg GENIUS_API_KEY=${{ secrets.GENIUS_API_KEY }} --build-arg SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }} --build-arg SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }} --build-arg SONG_NUMBER_LIMIT=${{ secrets.SONG_NUMBER_LIMIT }} .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest --build-arg GENIUS_API_KEY=${{ secrets.GENIUS_API_KEY }} --build-arg SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }} --build-arg SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }} --build-arg SONG_NUMBER_LIMIT=40 .
       
       - name: Push to DockerHub
         run: |

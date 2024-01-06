@@ -75,7 +75,7 @@ jobs:
       
       - name: Get Docker Image SHA
         run: |
-          IMAGE_SHA=$(docker inspect --format='{{index .RepoDigests 0}}' spotube-web:latest)
+          IMAGE_SHA=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest)
           echo "Docker Image SHA: $IMAGE_SHA"
           echo "::set-output name=image_sha::$IMAGE_SHA"
         shell: bash

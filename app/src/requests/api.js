@@ -13,3 +13,7 @@ export async function  downloadRequest(playlist_link, session_id, downloadLyrics
 export async function fetchStatus(session_id) {
   return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/status/${session_id}`);
 }
+
+export async function fetchArchiveNumber(session_id) {
+  return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/songs/${session_id}`);
+}

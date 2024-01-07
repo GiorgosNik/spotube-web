@@ -40,13 +40,11 @@ export default function ProgressBar(props) {
             {props.succeeded} Songs Downloaded | {props.failed} Songs Failed |{" "}
             {props.total - (props.succeeded + props.failed)} Songs Remaining
           </Typography>
-        </Box>
-      )}
-      {props.total === process.env.SONG_NUMBER_LIMIT && (
-        <Box>
-          <Typography align="center" color="primary.contrastText" paragraph>
-            The downloader is limited to {process.env.SONG_NUMBER_LIMIT} songs per playlist.
-          </Typography>
+          {props.total === 40 && (
+            <Typography align="center" color="primary.contrastText" paragraph>
+              The downloader is limited to 40 songs per playlist.
+            </Typography>
+          )}
         </Box>
       )}
     </Stack>

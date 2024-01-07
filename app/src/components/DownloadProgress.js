@@ -3,7 +3,7 @@ import { theme } from "../theme";
 import LoadingCircle from "./LoadingCircle";
 import ProgressBar from "./ProgressBar";
 import { mountedStyle, unmountedStyle } from "../animations.js";
-import { fetchStatus } from "../requests/api";
+import { fetchStatus, fetchArchiveNumber } from "../requests/api";
 import PropTypes from "prop-types";
 
 import {
@@ -28,10 +28,14 @@ export default function DownloadProgress(props) {
   };
 
   const handleDownloadArchive = async () => {
-    window.open(
-      `${process.env.REACT_APP_API_BASE_URL}/songs/${props.uniqueUserID}`,
-      "_blank"
-    );
+    const response = await fetchArchiveNumber(props.uniqueUserID);
+    const songNumber = response.data["size"];
+    for (let i = 1; i <= songNumber; i++) {
+      window.open(
+        `${process.env.REACT_APP_API_BASE_URL}/part/${props.uniqueUserID}_part${i}`,
+        "_blank"
+      );
+    }
     props.setDownloadActive(false);
   };
 

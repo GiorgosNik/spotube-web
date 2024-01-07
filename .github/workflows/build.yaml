@@ -72,13 +72,6 @@ jobs:
         run: |
           cd server
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest --build-arg GENIUS_API_KEY=${{ secrets.GENIUS_API_KEY }} --build-arg SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }} --build-arg SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }} --build-arg SONG_NUMBER_LIMIT=${{ secrets.SONG_NUMBER_LIMIT }} .
-      
-      - name: Get Docker Image SHA
-        run: |
-          IMAGE_SHA=$(docker inspect --format='{{index .RepoDigests 0}}' your-image-name:latest)
-          echo "Docker Image SHA: $IMAGE_SHA"
-          echo "::set-output name=image_sha::$IMAGE_SHA"
-        shell: bash
 
       - name: Push to DockerHub
         run: |

@@ -1,19 +1,12 @@
 import json
 import os
-from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from django.utils.timezone import datetime
-import re
 from spotube import DownloadManager as Downloader
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 import os
 import zipfile
 import shutil
-
-from dotenv import load_dotenv
-load_dotenv()  # loads the configs from .env
 
 downloaders = {}
 
@@ -103,7 +96,6 @@ def get_songs(request, session_id):
             response['content_type'] = 'application/zip'
             response['Content-Disposition'] = 'attachment; filename="songs' + session_id + '.zip"'
 
-        os.remove(zip_file_path)
         shutil.rmtree(os.path.join('songs/' + session_id), ignore_errors = True)
         del downloaders[session_id] # Remove downloader from dictionary
 
@@ -114,6 +106,3 @@ def get_songs(request, session_id):
         return HttpResponse(f"ERROR: OS error occurred: {e}", status=400)
     except Exception as e:
         return HttpResponse(f"ERROR: {e}", status=400)
-
-def home(request):
-    return HttpResponse("Hello, Django!")

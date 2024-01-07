@@ -28,7 +28,7 @@ export default function DownloadInput(props) {
   let [playlist_link, setPlaylistLink] = React.useState("");
   let [inputErrorMessage, setInputErrorMessage] = React.useState("");
   let [downloadLyrics, setDownloadLyrics] = React.useState(true);
-  let [normalizeAudio, setNormalizeAudio] = React.useState(true);
+  let [normalizeAudio, setNormalizeAudio] = React.useState(false);
 
   const handleArrowButtonClick = () => {
     setChecked((prev) => !prev);

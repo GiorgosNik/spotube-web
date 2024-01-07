@@ -84,18 +84,24 @@ def get_songs(request, session_id):
         if session_id not in downloaders:
             return HttpResponse(f"ERROR: No active download session found for user {session_id}", status = 400)
 
-        zip_file_path = './songs' + session_id + '.zip'
-        zip_file = zipfile.ZipFile(zip_file_path, 'w')
-        for root, dirs, files in os.walk('songs/' + session_id):
-            for file in files:
-                zip_file.write(os.path.join(root, file))
-        zip_file.close()
-        
+        size = create_zip_files(session_id, 90)
+        status_info = {
+            "size": size
+        }
+        return JsonResponse(status_info, safe = False)
+
+    except Exception as e:
+        return HttpResponse(f"ERROR: {e}", status = 400)
+
+def download_part(request, session_id_part):
+    try:
+        zip_file_path = f'./songs/{session_id_part}.zip'
         with open(zip_file_path, 'rb') as zip:
             response = HttpResponse(zip.read())
             response['content_type'] = 'application/zip'
-            response['Content-Disposition'] = 'attachment; filename="songs' + session_id + '.zip"'
+            response['Content-Disposition'] = f'attachment; filename="songs_{session_id_part}.zip"'
 
+        os.remove(zip_file_path)
         return response
     except FileNotFoundError:
         return HttpResponse(f"ERROR: File not found: {zip_file_path}", status=400)
@@ -103,3 +109,28 @@ def get_songs(request, session_id):
         return HttpResponse(f"ERROR: OS error occurred: {e}", status=400)
     except Exception as e:
         return HttpResponse(f"ERROR: {e}", status=400)
+
+def create_zip_files(session_id, max_size_mb):
+    files = [f for f in os.listdir('./songs/' + session_id) if f.endswith('.mp3')]
+    
+    current_zip_index = 1
+    current_zip_size = 0
+    zip_file_path = f'./songs/{session_id}_part{current_zip_index}.zip'
+    zip_file = zipfile.ZipFile(zip_file_path, 'w')
+
+    for file in files:
+        file_path = os.path.join('./songs/' + session_id, file)
+        file_size_mb = os.path.getsize(file_path) / (1024 ** 2)
+
+        if current_zip_size + file_size_mb > max_size_mb:
+            zip_file.close()
+            current_zip_index += 1
+            zip_file_path = f'./songs/{session_id}_part{current_zip_index}.zip'
+            zip_file = zipfile.ZipFile(zip_file_path, 'w')
+            current_zip_size = 0
+
+        zip_file.write(file_path)
+        current_zip_size += file_size_mb
+
+    zip_file.close()
+    return current_zip_index

@@ -82,3 +82,33 @@ class ApiTests(TestCase):
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_part(self):
+        self.client.post(
+            reverse('download'), # Generate the URL for the 'download' named URL pattern
+            {
+                "session_id": "test3",
+                "playlist_link": "https://open.spotify.com/playlist/69jfWlcZdH0vTplpLwcZdZ?si=cc28ff445ed84528",
+                "normalize_volume": False
+            },
+            format='json'
+        )
+        progressPercentage = 0
+        while progressPercentage < 100:
+            response = self.client.get(
+                reverse('get_status', args=['test3']),
+                format='json'
+            )
+            response_json = response.json()
+            progressPercentage = response_json['progressPercentage']
+            
+        response = self.client.get(
+            reverse('get_songs', args=['test3']),
+            format='json'
+        )
+
+        response = self.client.get(
+            reverse('get_part', args=['test3_part1']),
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -42,10 +42,10 @@ export default function ProgressBar(props) {
           </Typography>
         </Box>
       )}
-      {props.total === process.env.REACT_APP_API_BASE_URL && (
+      {props.total === process.env.SONG_NUMBER_LIMIT && (
         <Box>
           <Typography align="center" color="primary.contrastText" paragraph>
-            The downloader is limited to {process.env.REACT_APP_API_BASE_URL} songs per playlist.
+            The downloader is limited to {process.env.SONG_NUMBER_LIMIT} songs per playlist.
           </Typography>
         </Box>
       )}

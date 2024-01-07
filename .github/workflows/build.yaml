@@ -17,6 +17,7 @@ jobs:
       SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
       SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
       SONG_NUMBER_LIMIT: ${{ secrets.SONG_NUMBER_LIMIT }}
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
 
     steps:
       - uses: actions/checkout@v3
@@ -55,6 +56,7 @@ jobs:
       SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
       SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
       SONG_NUMBER_LIMIT: ${{ secrets.SONG_NUMBER_LIMIT }}
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
 
     steps:
       - uses: actions/checkout@v3
@@ -71,7 +73,7 @@ jobs:
       - name: Build image
         run: |
           cd server
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest --build-arg GENIUS_API_KEY=${{ secrets.GENIUS_API_KEY }} --build-arg SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }} --build-arg SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }} --build-arg SONG_NUMBER_LIMIT=${{ secrets.SONG_NUMBER_LIMIT }} .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spotube-web:latest --build-arg GENIUS_API_KEY=${{ secrets.GENIUS_API_KEY }} --build-arg SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }} --build-arg SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }} --build-arg SONG_NUMBER_LIMIT=${{ secrets.SONG_NUMBER_LIMIT }} --build-arg DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} .
 
       - name: Push to DockerHub
         run: |
@@ -100,7 +102,7 @@ jobs:
         app-name: 'SpotubeWeb'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_3e189a110a5e4066a5fd5ecce7958736 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_e882a4bd053e445bae0c8b8303e2858d }}/spotube-web@${{ needs.Docker.outputs.image_sha }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_e882a4bd053e445bae0c8b8303e2858d }}/spotube-web:latest'
         
   GithubPagesDeploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

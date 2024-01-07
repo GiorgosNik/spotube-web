@@ -96,9 +96,6 @@ def get_songs(request, session_id):
             response['content_type'] = 'application/zip'
             response['Content-Disposition'] = 'attachment; filename="songs' + session_id + '.zip"'
 
-        shutil.rmtree(os.path.join('songs/' + session_id), ignore_errors = True)
-        del downloaders[session_id] # Remove downloader from dictionary
-
         return response
     except FileNotFoundError:
         return HttpResponse(f"ERROR: File not found: {zip_file_path}", status=400)

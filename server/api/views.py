@@ -1,12 +1,12 @@
 import json
-import os
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 from spotube import DownloadManager as Downloader
 from rest_framework.views import APIView
 from rest_framework.parsers import JSONParser
 import os
-import zipfile
 import shutil
+import mimetypes
+import zipfile
 
 downloaders = {}
 
@@ -79,25 +79,32 @@ def get_status(request, session_id):
         return HttpResponse(f"ERROR: {e}", status = 400)
 
 
+def stream_zip_file(file_path, chunk_size=8192):
+    with open(file_path, 'rb') as f:
+        while True:
+            chunk = f.read(chunk_size)
+            if not chunk:
+                break
+            yield chunk
+
 def get_songs(request, session_id):
-    try: 
+    try:
         if session_id not in downloaders:
-            return HttpResponse(f"ERROR: No active download session found for user {session_id}", status = 400)
+            return HttpResponse(f"ERROR: No active download session found for user {session_id}", status=400)
 
         zip_file_path = './songs' + session_id + '.zip'
-        zip_file = zipfile.ZipFile(zip_file_path, 'w')
-        for root, dirs, files in os.walk('songs/' + session_id):
-            for file in files:
-                zip_file.write(os.path.join(root, file))
-        zip_file.close()
-        
-        with open(zip_file_path, 'rb') as zip:
-            response = HttpResponse(zip.read())
-            response['content_type'] = 'application/zip'
-            response['Content-Disposition'] = 'attachment; filename="songs' + session_id + '.zip"'
+        with zipfile.ZipFile(zip_file_path, 'w') as zip_file:
+            for root, dirs, files in os.walk('songs/' + session_id):
+                for file in files:
+                    zip_file.write(os.path.join(root, file))
 
-        shutil.rmtree(os.path.join('songs/' + session_id), ignore_errors = True)
-        del downloaders[session_id] # Remove downloader from dictionary
+        response = StreamingHttpResponse(stream_zip_file(zip_file_path))
+        content_type, encoding = mimetypes.guess_type(zip_file_path)
+        response['Content-Type'] = content_type
+        response['Content-Disposition'] = f'attachment; filename="songs{session_id}.zip"'
+
+        shutil.rmtree(os.path.join('songs/' + session_id), ignore_errors=True)
+        del downloaders[session_id]  # Remove downloader from dictionary
 
         return response
     except FileNotFoundError:

@@ -100,8 +100,7 @@ def download_part(request, session_id_part):
             response = HttpResponse(zip.read())
             response['content_type'] = 'application/zip'
             response['Content-Disposition'] = f'attachment; filename="songs_{session_id_part}.zip"'
-
-        os.remove(zip_file_path)
+            
         return response
     except FileNotFoundError:
         return HttpResponse(f"ERROR: File not found: {zip_file_path}", status=400)

@@ -84,7 +84,7 @@ def get_songs(request, session_id):
         if session_id not in downloaders:
             return HttpResponse(f"ERROR: No active download session found for user {session_id}", status = 400)
 
-        size = create_zip_files(session_id, 90)
+        size = create_zip_files(session_id, 70)
         status_info = {
             "size": size
         }
